@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 
 @Component({
     selector: 'contacts',
-    templateUrl: './contacts.component.html'
+    templateUrl: './contacts.component.html',
+    styleUrls: ['./contacts.component.css']
 })
 export class ContactsComponent {
     public contacts: Contact[] = [];
@@ -24,14 +25,22 @@ export class ContactsComponent {
         });
 
     }
+
+    delete() {
+        console.warn('deleting...');
+    }
+
+    edit() {
+        console.warn('editing...');
+    }
 }
 
 interface Contact {
-    ContactID: string;
-    FirstName: string;
-    LastName: number;
-    Email: number;
-    Birthday: Date;
-    ProfilePicture: string;
-    Comments: string;
+    contactID: string;
+    firstName: string;
+    lastName: number;
+    email: number;
+    birthday: Date;
+    profilePicture: string;
+    comments: string;
 }

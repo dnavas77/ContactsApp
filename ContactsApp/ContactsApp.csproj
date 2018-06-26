@@ -17,10 +17,10 @@
 
   <ItemGroup>
     <!-- Files not to publish (note that the 'dist' subfolders are re-added below) -->
-    <Compile Remove="ClientApp\app\components\contacts\new - Copy\**" />
+    <Compile Remove="ClientApp\app\components\contacts\form\**" />
     <Content Remove="ClientApp\**" />
-    <EmbeddedResource Remove="ClientApp\app\components\contacts\new - Copy\**" />
-    <None Remove="ClientApp\app\components\contacts\new - Copy\**" />
+    <EmbeddedResource Remove="ClientApp\app\components\contacts\form\**" />
+    <None Remove="ClientApp\app\components\contacts\form\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,6 +28,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="ClientApp\app\components\contacts\form\form.component.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\app\components\contacts\form\form.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\contacts\new\new.component.ts" />
   </ItemGroup>
 

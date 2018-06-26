@@ -15,24 +15,32 @@
                 <th>Email</th>
                 <th>Phone</th>
                 <th>Birthday</th>
-                <th>Profile Picture</th>
-                <th>Comments</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let contact of contacts">
-                <td>{{ contact.FirstName}}</td>
-                <td>{{ contact.LastName}}</td>
-                <td>{{ contact.Email}}</td>
-                <td>{{ contact.Phone}}</td>
-                <td>{{ contact.Birthday}}</td>
-                <td>{{ contact.ProfilePicture}}</td>
-                <td>{{ contact.Comments}}</td>
+                <td>{{ contact.firstName }}</td>
+                <td>{{ contact.lastName }}</td>
+                <td>{{ contact.email }}</td>
+                <td>{{ contact.phone }}</td>
+                <td>{{ contact.birthday }}</td>
+                <td>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Actions <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a (click)="edit()">Edit</a></li>
+                            <li><a (click)="delete()">Delete</a></li>
+                        </ul>
+                    </div>
+                </td>
             </tr>
         </tbody>
 
         <tbody>
-            <tr class="text-centered" colspan="6" *ngIf="!contacts && !fetchingContacts">No Data.</tr>
+            <tr class="text-centered" colspan="6" *ngIf="!contacts.length && !fetchingContacts">No Data.</tr>
         </tbody>
 
         <tbody>
