@@ -17,7 +17,10 @@
 
   <ItemGroup>
     <!-- Files not to publish (note that the 'dist' subfolders are re-added below) -->
+    <Compile Remove="ClientApp\app\components\contacts\new - Copy\**" />
     <Content Remove="ClientApp\**" />
+    <EmbeddedResource Remove="ClientApp\app\components\contacts\new - Copy\**" />
+    <None Remove="ClientApp\app\components\contacts\new - Copy\**" />
   </ItemGroup>
 
   <ItemGroup>

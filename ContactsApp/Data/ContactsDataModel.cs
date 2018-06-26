@@ -27,5 +27,8 @@ namespace ContactsApp
 
         [MaxLength(256)]
         public string ProfilePicture { get; set; }
+
+        [MaxLength(2000)]
+        public string Comments { get; set; }
     }
 }

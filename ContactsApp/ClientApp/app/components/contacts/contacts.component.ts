@@ -33,4 +33,5 @@ interface Contact {
     Email: number;
     Birthday: Date;
     ProfilePicture: string;
+    Comments: string;
 }
