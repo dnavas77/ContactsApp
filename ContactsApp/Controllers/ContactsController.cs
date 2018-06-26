@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ContactsApp.Controllers
 {
     [Route("api/[controller]")]
-    public class SampleDataController : Controller
+    public class ContactsController : Controller
     {
         private static string[] Summaries = new[]
         {
