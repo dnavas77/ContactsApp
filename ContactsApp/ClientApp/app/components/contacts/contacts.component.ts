@@ -2,12 +2,12 @@ import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
-    selector: 'fetchdata',
+    selector: 'contacts',
     templateUrl: './contacts.component.html'
 })
 export class ContactsComponent {
     public contacts: Contact[] = [];
-    public fetchingContacts = false;
+    public fetchingContacts: boolean = false;
 
     constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
         this.GetContacts(http, baseUrl);
