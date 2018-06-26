@@ -1,0 +1,25 @@
+<h1>Manage Contacts</h1>
+
+<p *ngIf="!contacts && !fetchingContacts"><em>No Data</em></p>
+<p *ngIf="fetchingData"><em>Loading...</em></p>
+
+<table class='table' *ngIf="forecasts">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Temp. (C)</th>
+            <th>Temp. (F)</th>
+            <th>Summary</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let contact of contacts">
+            <td>{{ contact.FirstName}}</td>
+            <td>{{ contact.LastName}}</td>
+            <td>{{ contact.Email}}</td>
+            <td>{{ contact.Phone}}</td>
+            <td>{{ contact.Birthday}}</td>
+            <td>{{ contact.ProfilePicture}}</td>
+        </tr>
+    </tbody>
+</table>

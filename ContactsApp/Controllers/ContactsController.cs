@@ -6,38 +6,61 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ContactsApp.Controllers
 {
-    [Route("api/[controller]")]
-    public class ContactsController : Controller
+    [Route("api/contacts")]
+    public class ContactsController : ControllerBase
     {
         private static string[] Summaries = new[]
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
-        [HttpGet("[action]")]
-        public IEnumerable<WeatherForecast> WeatherForecasts()
+        // GET api/contacts
+        [HttpGet]
+        public IEnumerable<ContactsDataModel> Get()
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            using (var context = new AppDbContext())
             {
-                DateFormatted = DateTime.Now.AddDays(index).ToString("d"),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            });
+                return context.Contacts.ToList();
+            }
         }
 
-        public class WeatherForecast
+        // GET api/contacts/{id}
+        [HttpGet("{id}")]
+        public ContactsDataModel Get(int id)
         {
-            public string DateFormatted { get; set; }
-            public int TemperatureC { get; set; }
-            public string Summary { get; set; }
-
-            public int TemperatureF
+            using (var context = new AppDbContext())
             {
-                get
+                return context.Contacts.Find(id);
+            }
+        }
+
+        // POST api/contacts/
+        [HttpPost]
+        public void Post()
+        {
+            using (var context = new AppDbContext())
+            {
+                context.Contacts.Add(new ContactsDataModel
                 {
-                    return 32 + (int)(TemperatureC / 0.5556);
-                }
+                    FirstName = "dani",
+                    LastName = "navas",
+                    Email = "dani@navas",
+                    Phone = "7777777777"
+                });
+                context.SaveChanges();
+            }
+        }
+
+        // DELETE api/contacts/{id}
+        [HttpDelete("{id}")]
+        public string Delete(int id)
+        {
+            using (var context = new AppDbContext())
+            {
+                ContactsDataModel contact = context.Contacts.Find(id);
+                context.Contacts.Remove(contact);
+                context.SaveChanges();
+                return "success";
             }
         }
     }

@@ -22,7 +22,12 @@ namespace ContactsApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            using (var context = new AppDbContext())
+            {
+                // Make sure we have a database
+                context.Database.EnsureCreated();
+            }
+                services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -34,7 +39,7 @@ namespace ContactsApp
                 app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
                 {
                     HotModuleReplacement = true,
-                    HotModuleReplacementEndpoint = "/dist/__webpack_hmr"
+                    //HotModuleReplacementEndpoint = "/dist/__webpack_hmr"
                 });
             }
             else
