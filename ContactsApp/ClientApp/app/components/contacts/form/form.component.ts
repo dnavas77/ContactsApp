@@ -2,6 +2,7 @@
 import { HttpClient, HttpRequest } from '@angular/common/http';
 import { Event } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Router } from "@angular/router";
 
 @Component({
     selector: 'contact-form',
@@ -15,16 +16,19 @@ export class ContactFormComponent implements OnInit {
     photo: File | null = null;
     contactForm!: FormGroup;
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private router: Router) { }
 
     ngOnInit() {
         this.contactForm = new FormGroup({
             firstName: new FormControl('', Validators.required),
             lastName: new FormControl('', Validators.required),
-            email: new FormControl('', Validators.required),
-            phone: new FormControl(),
+            email: new FormControl('', [
+                Validators.required,
+                Validators.pattern("[^ @]*@[^ @]*")
+            ]),
+            phone: new FormControl('', Validators.pattern("/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im")),
             birthday: new FormControl(),
-            comments: new FormControl(),
+            comments: new FormControl('', Validators.maxLength(2000)),
         });
     }
 
@@ -45,14 +49,14 @@ export class ContactFormComponent implements OnInit {
             return;
         }
         const formData = new FormData();
-        formData.set('FirstName', this.contactForm.controls.firstName.value);
-        formData.set('LastName', this.contactForm.controls.lastName.value);
-        formData.set('Email', this.contactForm.controls.email.value);
+        formData.append('FirstName', this.contactForm.controls.firstName.value);
+        formData.append('LastName', this.contactForm.controls.lastName.value);
+        formData.append('Email', this.contactForm.controls.email.value);
 
         const uploadReq = new HttpRequest('POST', 'api/contacts', formData);
 
         this.http.request(uploadReq).subscribe((event: any) => {
-            console.warn('contact saved....');
+            this.router.navigate(['/contacts']);
         });
     }
 
