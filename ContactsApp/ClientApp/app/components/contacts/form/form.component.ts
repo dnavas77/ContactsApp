@@ -24,9 +24,9 @@ export class ContactFormComponent implements OnInit {
             lastName: new FormControl('', Validators.required),
             email: new FormControl('', [
                 Validators.required,
-                Validators.pattern("[^ @]*@[^ @]*")
+                Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
             ]),
-            phone: new FormControl('', Validators.pattern("/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im")),
+            phone: new FormControl('', Validators.pattern(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/)),
             birthday: new FormControl(),
             comments: new FormControl('', Validators.maxLength(2000)),
         });
@@ -52,11 +52,18 @@ export class ContactFormComponent implements OnInit {
         formData.append('FirstName', this.contactForm.controls.firstName.value);
         formData.append('LastName', this.contactForm.controls.lastName.value);
         formData.append('Email', this.contactForm.controls.email.value);
+        formData.append('Phone', this.contactForm.controls.phone.value);
+        formData.append('Comments', this.contactForm.controls.comments.value);
+        if (this.photo && this.photo.type) {
+            formData.append('ProfilePicture', this.photo);
+        }
 
         const uploadReq = new HttpRequest('POST', 'api/contacts', formData);
 
         this.http.request(uploadReq).subscribe((event: any) => {
             this.router.navigate(['/contacts']);
+        }, error => {
+            console.warn(error);
         });
     }
 
