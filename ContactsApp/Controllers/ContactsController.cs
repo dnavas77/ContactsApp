@@ -59,45 +59,51 @@ namespace ContactsApp.Controllers
             // Save Image
             string folderName = "profile-pics";
             string fileName = "";
-            try
+            if (contact.ProfilePicture != null)
             {
-                var file = contact.ProfilePicture;
-                string webRootPath = _hostingEnv.WebRootPath;
-                string newPath = Path.Combine(webRootPath, folderName);
-                if (!Directory.Exists(newPath))
+                try
                 {
-                    Directory.CreateDirectory(newPath);
-                }
-                if (file.Length > 0)
-                {
-                    fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-                    var milliseconds = (DateTime.Now - new DateTime(1970, 1, 1)).TotalMilliseconds;
-                    fileName = milliseconds + fileName;
-                    string fullPath = Path.Combine(newPath, fileName);
-                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                    var file = contact.ProfilePicture;
+                    string webRootPath = _hostingEnv.WebRootPath;
+                    string newPath = Path.Combine(webRootPath, folderName);
+                    if (!Directory.Exists(newPath))
                     {
-                        file.CopyTo(stream);
+                        Directory.CreateDirectory(newPath);
+                    }
+                    if (file.Length > 0)
+                    {
+                        fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                        var milliseconds = (DateTime.Now - new DateTime(1970, 1, 1)).TotalMilliseconds;
+                        fileName = milliseconds + fileName;
+                        string fullPath = Path.Combine(newPath, fileName);
+                        using (var stream = new FileStream(fullPath, FileMode.Create))
+                        {
+                            file.CopyTo(stream);
+                        }
                     }
                 }
-            }
-            catch (System.Exception ex)
-            {
-                return StatusCode(500, ex.Message);
+                catch (System.Exception ex)
+                {
+                    return StatusCode(500, ex.Message);
+                }
             }
 
+            string _newId = null;
             using (var context = new AppDbContext())
             {
-                context.Contacts.Add(new ContactsDataModel
+                ContactsDataModel newContact = new ContactsDataModel
                 {
                     FirstName = contact.FirstName,
                     LastName = contact.LastName,
                     Email = contact.Email,
                     Phone = contact.Phone,
-                    ProfilePicture = folderName + "/" + fileName
-                });
+                    ProfilePicture = fileName != "" ? folderName + "/" + fileName : null
+                };
+                context.Contacts.Add(newContact);
                 context.SaveChanges();
+                _newId = newContact.ContactID;
             }
-            return CreatedAtAction("Get", new { id = 33 });
+            return CreatedAtAction("Get", new { id = _newId });
         }
 
         // PUT api/contacts/

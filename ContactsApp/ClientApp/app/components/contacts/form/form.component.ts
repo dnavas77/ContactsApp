@@ -1,5 +1,5 @@
 ﻿import { Component, Input, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpRequest } from '@angular/common/http';
 import { Event } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
@@ -14,6 +14,8 @@ export class ContactFormComponent implements OnInit {
     invalidImage: boolean = false;
     photo: File | null = null;
     contactForm!: FormGroup;
+
+    constructor(private http: HttpClient) { }
 
     ngOnInit() {
         this.contactForm = new FormGroup({
@@ -42,7 +44,16 @@ export class ContactFormComponent implements OnInit {
             // Notify: there's errors in the form
             return;
         }
-        console.warn('submitted..');
+        const formData = new FormData();
+        formData.set('FirstName', this.contactForm.controls.firstName.value);
+        formData.set('LastName', this.contactForm.controls.lastName.value);
+        formData.set('Email', this.contactForm.controls.email.value);
+
+        const uploadReq = new HttpRequest('POST', 'api/contacts', formData);
+
+        this.http.request(uploadReq).subscribe((event: any) => {
+            console.warn('contact saved....');
+        });
     }
 
     cancelAdd() {
