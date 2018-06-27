@@ -10,6 +10,7 @@
     <table class='table'>
         <thead>
             <tr>
+                <th></th>
                 <th>First Name</th>
                 <th>Last Name</th>
                 <th>Email</th>
@@ -20,6 +21,7 @@
         </thead>
         <tbody>
             <tr *ngFor="let contact of contacts">
+                <td><img src="{{contact.profilePicture}}" style="height:50px;"/></td>
                 <td>{{ contact.firstName }}</td>
                 <td>{{ contact.lastName }}</td>
                 <td>{{ contact.email }}</td>

@@ -1,8 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ContactsApp.Controllers
@@ -10,10 +14,12 @@ namespace ContactsApp.Controllers
     [Route("api/contacts")]
     public class ContactsController : ControllerBase
     {
-        private static string[] Summaries = new[]
+        private IHostingEnvironment _hostingEnv;
+
+        public ContactsController(IHostingEnvironment hostingEnv)
         {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
+            _hostingEnv = hostingEnv;
+        }
 
         // GET api/contacts
         [HttpGet]
@@ -43,12 +49,42 @@ namespace ContactsApp.Controllers
 
         // POST api/contacts/
         [HttpPost]
-        public IActionResult Post([FromBody]Contact contact)
+        public IActionResult Post([FromForm]Contact contact)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+
+            // Save Image
+            string folderName = "profile-pics";
+            string fileName = "";
+            try
+            {
+                var file = contact.ProfilePicture;
+                string webRootPath = _hostingEnv.WebRootPath;
+                string newPath = Path.Combine(webRootPath, folderName);
+                if (!Directory.Exists(newPath))
+                {
+                    Directory.CreateDirectory(newPath);
+                }
+                if (file.Length > 0)
+                {
+                    fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                    var milliseconds = (DateTime.Now - new DateTime(1970, 1, 1)).TotalMilliseconds;
+                    fileName = milliseconds + fileName;
+                    string fullPath = Path.Combine(newPath, fileName);
+                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+
             using (var context = new AppDbContext())
             {
                 context.Contacts.Add(new ContactsDataModel
@@ -56,7 +92,8 @@ namespace ContactsApp.Controllers
                     FirstName = contact.FirstName,
                     LastName = contact.LastName,
                     Email = contact.Email,
-                    Phone = contact.Phone
+                    Phone = contact.Phone,
+                    ProfilePicture = folderName + "/" + fileName
                 });
                 context.SaveChanges();
             }
@@ -106,11 +143,10 @@ namespace ContactsApp.Controllers
 
             public DateTime Birthday { get; set; }
 
-            [MaxLength(256)]
-            public string ProfilePicture { get; set; }
-
             [MaxLength(2000)]
             public string Comments { get; set; }
+
+            public IFormFile ProfilePicture { get; set; }
         }
     }
 }
