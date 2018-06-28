@@ -34,7 +34,11 @@
                         </button>
                         <ul class="dropdown-menu" *dropdownMenu role="menu" aria-labelledby="button-basic">
                             <li role="menuitem"><a class="dropdown-item" (click)="edit()">Edit</a></li>
-                            <li role="menuitem"><a class="dropdown-item" (click)="delete()">Delete</a></li>
+                            <li role="menuitem">
+                                <a class="dropdown-item" (click)="openModal(confirmModalTemplate, contact)">
+                                    Delete
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </td>
@@ -50,3 +54,11 @@
         </tbody>
     </table>
 </div>
+
+<ng-template #confirmModalTemplate>
+    <div class="modal-body text-center">
+        <h3>are you sure you want to delete this contact?</h3>
+        <button type="button" class="btn btn-default btn-lg" (click)="delete()">Yes</button>
+        <button type="button" class="btn btn-primary btn-lg" (click)="modalRef.hide()">No</button>
+    </div>
+</ng-template>

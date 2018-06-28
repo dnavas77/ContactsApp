@@ -121,14 +121,14 @@ namespace ContactsApp.Controllers
 
         // DELETE api/contacts/{id}
         [HttpDelete("{id}")]
-        public string Delete(int id)
+        public IActionResult Delete(string id)
         {
             using (var context = new AppDbContext())
             {
                 ContactsDataModel contact = context.Contacts.Find(id);
                 context.Contacts.Remove(contact);
                 context.SaveChanges();
-                return "success";
+                return StatusCode(204, "Contact deleted successfully.");
             }
         }
 
