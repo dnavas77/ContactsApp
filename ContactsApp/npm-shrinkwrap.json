@@ -1063,11 +1063,10 @@
         "multicast-dns-service-types": "^1.1.0"
       }
     },
-    "bootstrap": {
+    "bootstrap-css-only": {
       "version": "3.3.7",
-      "resolved": "https://registry.npmjs.org/bootstrap/-/bootstrap-3.3.7.tgz",
-      "integrity": "sha1-WjiTlFSfIzMIdaOxUGVldPip63E=",
-      "dev": true
+      "resolved": "https://registry.npmjs.org/bootstrap-css-only/-/bootstrap-css-only-3.3.7.tgz",
+      "integrity": "sha1-aKFZJap7mw/A/rc/+F2LjDmJwW0="
     },
     "brace-expansion": {
       "version": "1.1.8",
@@ -2907,7 +2906,8 @@
         "ansi-regex": {
           "version": "2.1.1",
           "bundled": true,
-          "dev": true
+          "dev": true,
+          "optional": true
         },
         "aproba": {
           "version": "1.2.0",
@@ -3322,7 +3322,8 @@
         "safe-buffer": {
           "version": "5.1.1",
           "bundled": true,
-          "dev": true
+          "dev": true,
+          "optional": true
         },
         "safer-buffer": {
           "version": "2.1.2",
@@ -3378,6 +3379,7 @@
           "version": "3.0.1",
           "bundled": true,
           "dev": true,
+          "optional": true,
           "requires": {
             "ansi-regex": "^2.0.0"
           }
@@ -3421,12 +3423,14 @@
         "wrappy": {
           "version": "1.0.2",
           "bundled": true,
-          "dev": true
+          "dev": true,
+          "optional": true
         },
         "yallist": {
           "version": "3.0.2",
           "bundled": true,
-          "dev": true
+          "dev": true,
+          "optional": true
         }
       }
     },
@@ -5067,6 +5071,11 @@
       "resolved": "https://registry.npmjs.org/next-tick/-/next-tick-1.0.0.tgz",
       "integrity": "sha1-yobR/ogoFpsBICCOPchCS524NCw=",
       "dev": true
+    },
+    "ngx-bootstrap": {
+      "version": "2.0.5",
+      "resolved": "https://registry.npmjs.org/ngx-bootstrap/-/ngx-bootstrap-2.0.5.tgz",
+      "integrity": "sha512-IduTVb78RDVlrz2+bn6GXK/REfM/RsRnz/AENwmrgTOg1AtvahJ9qANxXRNn33Kv9GJmkOYy/MhD3DyzeMb16w=="
     },
     "no-case": {
       "version": "2.3.2",
