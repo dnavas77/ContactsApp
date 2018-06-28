@@ -40,6 +40,7 @@ interface Contact {
     firstName: string;
     lastName: number;
     email: number;
+    phone: string,
     birthday: Date;
     profilePicture: string;
     comments: string;

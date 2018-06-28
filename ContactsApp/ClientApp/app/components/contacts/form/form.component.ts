@@ -46,6 +46,16 @@ export class ContactFormComponent implements OnInit {
             birthday: new FormControl(),
             comments: new FormControl('', Validators.maxLength(2000)),
         });
+        if (this.actionType === 'edit' && this.contactModel) {
+            this.contactForm.controls.firstName.setValue(this.contactModel.firstName);
+            this.contactForm.controls.lastName.setValue(this.contactModel.lastName);
+            this.contactForm.controls.email.setValue(this.contactModel.email);
+            this.contactForm.controls.phone.setValue(this.contactModel.phone);
+            this.contactForm.controls.comments.setValue(this.contactModel.comments);
+            this.contactForm.controls.birthday.setValue(
+                (new Date(this.contactModel.birthday)).toLocaleDateString('en-us')
+            );
+        }
     }
 
     getFile(event: any) {
@@ -100,6 +110,7 @@ interface Contact {
     firstName: string;
     lastName: number;
     email: number;
+    phone: string,
     birthday: Date;
     profilePicture: string;
     comments: string;
