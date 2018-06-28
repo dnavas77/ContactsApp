@@ -146,10 +146,11 @@ namespace ContactsApp.Controllers
             [MaxLength(256)]
             public string Email { get; set; }
 
-            [MaxLength(10)]
+            [MaxLength(20)]
             public string Phone { get; set; }
 
-            public DateTime Birthday { get; set; }
+            [DataType(DataType.Date)]
+            public DateTime? Birthday { get; set; }
 
             [MaxLength(2000)]
             public string Comments { get; set; }

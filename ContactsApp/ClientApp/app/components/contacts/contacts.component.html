@@ -39,14 +39,14 @@
                     </div>
                 </td>
             </tr>
-        </tbody>
 
-        <tbody>
-            <tr class="text-centered" colspan="6" *ngIf="!contacts.length && !fetchingContacts">No Data.</tr>
-        </tbody>
+            <tr align="center" colspan="7" *ngIf="!contacts.length && !fetchingContacts">
+                No Data.
+            </tr>
 
-        <tbody>
-            <tr class="text-center" colspan="6" *ngIf="fetchingContacts">Loading...</tr>
+            <tr align="center" colspan="7" *ngIf="fetchingContacts">
+                Loading...
+            </tr>
         </tbody>
     </table>
 </div>

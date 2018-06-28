@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -6,12 +6,14 @@ import { HttpClient } from '@angular/common/http';
     templateUrl: './contacts.component.html',
     styleUrls: ['./contacts.component.css']
 })
-export class ContactsComponent {
+export class ContactsComponent implements OnInit {
     public contacts: Contact[] = [];
     public fetchingContacts: boolean = false;
 
-    constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
-        this.GetContacts(http, baseUrl);
+    constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) { }
+
+    ngOnInit() {
+        this.GetContacts(this.http, this.baseUrl);
     }
 
     GetContacts(http: HttpClient, baseUrl: string): void {

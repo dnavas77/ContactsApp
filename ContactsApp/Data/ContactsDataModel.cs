@@ -20,10 +20,10 @@ namespace ContactsApp
         [MaxLength(256)]
         public string Email { get; set; }
 
-        [MaxLength(10)]
+        [MaxLength(20)]
         public string Phone { get; set; }
 
-        public DateTime Birthday { get; set; }
+        public DateTime? Birthday { get; set; }
 
         [MaxLength(256)]
         public string ProfilePicture { get; set; }
