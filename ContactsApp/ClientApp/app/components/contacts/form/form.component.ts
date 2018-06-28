@@ -52,9 +52,12 @@ export class ContactFormComponent implements OnInit {
             this.contactForm.controls.email.setValue(this.contactModel.email);
             this.contactForm.controls.phone.setValue(this.contactModel.phone);
             this.contactForm.controls.comments.setValue(this.contactModel.comments);
-            this.contactForm.controls.birthday.setValue(
-                (new Date(this.contactModel.birthday)).toLocaleDateString('en-us')
-            );
+
+            if (this.contactModel.birthday) {
+                this.contactForm.controls.birthday.setValue(
+                    (new Date(this.contactModel.birthday)).toLocaleDateString('en-us')
+                );
+            }
         }
     }
 
@@ -69,7 +72,7 @@ export class ContactFormComponent implements OnInit {
         }
     }
 
-    submitNewContact() {
+    submitContact() {
         if (this.contactForm.invalid || this.invalidImage) {
             // Notify: there's errors in the form
             return;
@@ -91,7 +94,9 @@ export class ContactFormComponent implements OnInit {
         const uploadReq = new HttpRequest('POST', 'api/contacts', formData);
 
         this.http.request(uploadReq).subscribe((event: any) => {
-            this.router.navigate(['/contacts']);
+            setTimeout(() => {
+                this.router.navigate(['/contacts']);
+            }, 1000);
         }, error => {
             console.warn(error);
         });

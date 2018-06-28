@@ -1,5 +1,5 @@
 <div class="col-sm-12" style="margin-top: 40px;">
-    <form (ngSubmit)="submitNewContact()" [formGroup]="contactForm" novalidate>
+    <form (ngSubmit)="submitContact()" [formGroup]="contactForm" novalidate>
         <div class="form-row" *ngIf="actionType == 'edit' && contactModel.profilePicture">
             <div class="form-group col-md-12">
                 <img src="{{contactModel.profilePicture}}" alt="profile picture" style="max-height: 200px;margin-bottom:8px;"/>
