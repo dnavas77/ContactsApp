@@ -1,8 +1,12 @@
-﻿import { Component, Input, OnInit } from '@angular/core';
+﻿import { Component, Input, OnInit, TemplateRef } from '@angular/core';
 import { HttpClient, HttpRequest } from '@angular/common/http';
 import { Event } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from "@angular/router";
+
+// Modal
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
 @Component({
     selector: 'contact-form',
@@ -11,12 +15,21 @@ import { Router } from "@angular/router";
 export class ContactFormComponent implements OnInit {
     @Input()
     actionType: string = "";
+    modalRef?: BsModalRef;
 
     invalidImage: boolean = false;
     photo: File | null = null;
     contactForm!: FormGroup;
 
-    constructor(private http: HttpClient, private router: Router) { }
+    constructor(
+        private http: HttpClient,
+        private router: Router,
+        private modalService: BsModalService
+    ) { }
+
+    openModal(template: TemplateRef<any>) {
+        this.modalRef = this.modalService.show(template);
+    }
 
     ngOnInit() {
         this.contactForm = new FormGroup({
@@ -72,6 +85,9 @@ export class ContactFormComponent implements OnInit {
     }
 
     cancelAdd() {
-        console.warn('cancel add..');
+        this.router.navigate(['/contacts']);
+        if (this.modalRef) {
+            this.modalRef.hide();
+        }
     }
 }

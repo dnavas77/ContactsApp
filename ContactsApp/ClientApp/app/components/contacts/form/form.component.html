@@ -67,9 +67,17 @@
          </div>
         <div class="form-row">
             <div class="form-group col-md-12">
-                <input type="button" class="btn btn-clear" (click)="cancelAdd()" value="Cancel"/>
-                <button type="submit" class="btn btn-primary" [disabled]="!contactForm.valid || invalidImage">Create</button>
+                <input type="button" class="btn btn-clear" (click)="openModal(confirmModalTemplate)" value="Cancel"/>
+                <button type="submit" class="btn btn-primary" [disabled]="!contactForm.valid || invalidImage">Save</button>
              </div>
         </div>
     </form>
 </div>
+
+<ng-template #confirmModalTemplate>
+    <div class="modal-body text-center">
+        <h3>are you sure you want to cancel?</h3>
+        <button type="button" class="btn btn-default btn-lg" (click)="cancelAdd()">Yes</button>
+        <button type="button" class="btn btn-primary btn-lg" (click)="modalRef.hide()">No</button>
+    </div>
+</ng-template>
