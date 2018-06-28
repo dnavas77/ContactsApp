@@ -10,6 +10,7 @@ import { HomeComponent } from './components/home/home.component';
 
 import { ContactsComponent } from './components/contacts/contacts.component';
 import { NewContactComponent } from './components/contacts/new/new.component';
+import { EditContactComponent } from './components/contacts/edit/edit.component';
 import { ContactFormComponent } from './components/contacts/form/form.component';
 
 
@@ -24,6 +25,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
         NavMenuComponent,
         ContactsComponent,
         NewContactComponent,
+        EditContactComponent,
         ContactFormComponent,
         HomeComponent
     ],
@@ -41,6 +43,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
             { path: 'home', component: HomeComponent },
             { path: 'contacts', component: ContactsComponent },
             { path: 'contacts/new', component: NewContactComponent },
+            { path: 'contacts/edit/:id', component: EditContactComponent },
             { path: '**', redirectTo: 'home' }
         ])
     ]

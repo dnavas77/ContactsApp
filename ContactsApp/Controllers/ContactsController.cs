@@ -33,17 +33,12 @@ namespace ContactsApp.Controllers
 
         // GET api/contacts/{id}
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public IActionResult Get(string id)
         {
             using (var context = new AppDbContext())
             {
                 ContactsDataModel contact = context.Contacts.Find(id);
-                return Ok(new Contact {
-                    FirstName = contact.FirstName,
-                    LastName = contact.LastName,
-                    Email = contact.Email,
-                    Phone = contact.Phone
-                });
+                return Ok(contact);
             }
         }
 

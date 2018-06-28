@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\app\components\contacts\edit\edit.component.ts" />
     <None Remove="ClientApp\app\components\contacts\new\new.component.ts" />
   </ItemGroup>
 
@@ -33,6 +34,7 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\app\components\contacts\form\form.component.ts" />
+    <TypeScriptCompile Include="ClientApp\app\components\contacts\edit\edit.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\contacts\new\new.component.ts" />
   </ItemGroup>
 

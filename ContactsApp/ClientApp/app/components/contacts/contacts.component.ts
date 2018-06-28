@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 // Modal
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'contacts',
@@ -20,7 +21,8 @@ export class ContactsComponent implements OnInit {
     constructor(
         private http: HttpClient,
         @Inject('BASE_URL') private baseUrl: string,
-        private modalService: BsModalService
+        private modalService: BsModalService,
+        private router: Router
     ) { }
 
     ngOnInit() {
@@ -53,10 +55,6 @@ export class ContactsComponent implements OnInit {
                 });
             });
         }
-    }
-
-    edit() {
-        console.warn('editing...');
     }
 }
 

@@ -15,8 +15,11 @@ import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 export class ContactFormComponent implements OnInit {
     @Input()
     actionType: string = "";
-    modalRef?: BsModalRef;
 
+    @Input()
+    contactModel?: Contact;
+
+    modalRef?: BsModalRef;
     invalidImage: boolean = false;
     photo: File | null = null;
     contactForm!: FormGroup;
@@ -90,4 +93,14 @@ export class ContactFormComponent implements OnInit {
             this.modalRef.hide();
         }
     }
+}
+
+interface Contact {
+    contactID: string;
+    firstName: string;
+    lastName: number;
+    email: number;
+    birthday: Date;
+    profilePicture: string;
+    comments: string;
 }
