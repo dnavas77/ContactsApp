@@ -1,11 +1,15 @@
 ﻿import { Component, Inject, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
+import { ActivatedRoute } from '@angular/router';
+
 @Component({
     selector: 'edit-contact',
     templateUrl: './edit.component.html'
 })
 export class EditContactComponent implements OnInit {
+
+    constructor(private activeRoute: ActivatedRoute) { }
 
     submitNewContact() {
         console.warn('submitted..');
@@ -16,6 +20,16 @@ export class EditContactComponent implements OnInit {
     }
 
     ngOnInit() {
-        console.log('hey');
+        console.warn(this.activeRoute.snapshot.params);
     }
+}
+
+interface Contact {
+    contactID: string;
+    firstName: string;
+    lastName: number;
+    email: number;
+    birthday: Date;
+    profilePicture: string;
+    comments: string;
 }
