@@ -26,15 +26,15 @@
                 <td>{{ contact.lastName }}</td>
                 <td>{{ contact.email }}</td>
                 <td>{{ contact.phone }}</td>
-                <td>{{ contact.birthday }}</td>
+                <td>{{ contact.birthday | date:  date:'mm/dd/yyyy' }}</td>
                 <td>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <div class="btn-group" dropdown>
+                        <button type="button" class="btn btn-default dropdown-toggle" dropdownToggle aria-controls="dropdown-basic">
                             Actions <span class="caret"></span>
                         </button>
-                        <ul class="dropdown-menu">
-                            <li><a (click)="edit()">Edit</a></li>
-                            <li><a (click)="delete()">Delete</a></li>
+                        <ul class="dropdown-menu" *dropdownMenu role="menu" aria-labelledby="button-basic">
+                            <li role="menuitem"><a class="dropdown-item" (click)="edit()">Edit</a></li>
+                            <li role="menuitem"><a class="dropdown-item" (click)="delete()">Delete</a></li>
                         </ul>
                     </div>
                 </td>

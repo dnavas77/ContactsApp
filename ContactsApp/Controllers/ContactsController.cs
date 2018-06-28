@@ -97,7 +97,9 @@ namespace ContactsApp.Controllers
                     LastName = contact.LastName,
                     Email = contact.Email,
                     Phone = contact.Phone,
-                    ProfilePicture = fileName != "" ? folderName + "/" + fileName : null
+                    Comments = contact.Comments,
+                    Birthday = contact.Birthday,
+                    ProfilePicture = fileName != "" ? folderName + "/" + fileName : null,
                 };
                 context.Contacts.Add(newContact);
                 context.SaveChanges();

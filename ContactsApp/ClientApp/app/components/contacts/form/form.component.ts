@@ -54,6 +54,10 @@ export class ContactFormComponent implements OnInit {
         formData.append('Email', this.contactForm.controls.email.value);
         formData.append('Phone', this.contactForm.controls.phone.value);
         formData.append('Comments', this.contactForm.controls.comments.value);
+        if (this.contactForm.controls.birthday.value) {
+            let _date = (new Date(this.contactForm.controls.birthday.value)).toLocaleDateString('en-us');
+            formData.append('Birthday', _date);
+        }
         if (this.photo && this.photo.type) {
             formData.append('ProfilePicture', this.photo);
         }

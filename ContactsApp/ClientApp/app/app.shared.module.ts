@@ -13,8 +13,9 @@ import { NewContactComponent } from './components/contacts/new/new.component';
 import { ContactFormComponent } from './components/contacts/form/form.component';
 
 
-// Datepicker
+// ngx-bootstrap
 import { BsDatepickerModule, DatepickerModule } from 'ngx-bootstrap/datepicker';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 @NgModule({
     declarations: [
@@ -28,6 +29,7 @@ import { BsDatepickerModule, DatepickerModule } from 'ngx-bootstrap/datepicker';
     imports: [
         BsDatepickerModule.forRoot(),
         DatepickerModule.forRoot(),
+        BsDropdownModule.forRoot(),
         CommonModule,
         HttpClientModule,
         FormsModule,
