@@ -8,8 +8,12 @@ import { ActivatedRoute } from '@angular/router';
     templateUrl: './edit.component.html'
 })
 export class EditContactComponent implements OnInit {
+    public contactModel?: Contact;
 
-    constructor(private activeRoute: ActivatedRoute) { }
+    constructor(
+        private activeRoute: ActivatedRoute,
+        private http: HttpClient
+    ) { }
 
     submitNewContact() {
         console.warn('submitted..');
@@ -20,7 +24,14 @@ export class EditContactComponent implements OnInit {
     }
 
     ngOnInit() {
-        console.warn(this.activeRoute.snapshot.params);
+        let _id = this.activeRoute.snapshot.params.id;
+        this.getContactModel(_id);
+    }
+
+    getContactModel(id: string) {
+        this.http.get<Contact>('api/contacts/' + id).subscribe(result => {
+            this.contactModel = result;
+        });
     }
 }
 

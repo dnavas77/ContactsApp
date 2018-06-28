@@ -2,4 +2,4 @@
     <h1>Edit Contact</h1>
 </div>
 <br/>
-<contact-form actionType="edit" [contactModel]="contactModel"></contact-form>
+<contact-form *ngIf="contactModel" actionType="edit" [contactModel]="contactModel"></contact-form>
