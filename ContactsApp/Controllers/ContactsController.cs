@@ -14,6 +14,7 @@ namespace ContactsApp.Controllers
     [Route("api/contacts")]
     public class ContactsController : ControllerBase
     {
+        const string FOLDER_NAME = "profile-pics";
         private IHostingEnvironment _hostingEnv;
 
         public ContactsController(IHostingEnvironment hostingEnv)
@@ -27,7 +28,7 @@ namespace ContactsApp.Controllers
         {
             using (var context = new AppDbContext())
             {
-                return context.Contacts.ToList();
+                return context.Contacts.OrderBy(c => c.FirstName).ToList();
             }
         }
 
@@ -52,7 +53,65 @@ namespace ContactsApp.Controllers
             }
 
             // Save Image
-            string folderName = "profile-pics";
+            string fileName = saveImageIfExists(contact);
+
+            string _newId = null;
+            using (var context = new AppDbContext())
+            {
+                ContactsDataModel newContact = new ContactsDataModel
+                {
+                    FirstName = contact.FirstName,
+                    LastName = contact.LastName,
+                    Email = contact.Email,
+                    Phone = contact.Phone,
+                    Comments = contact.Comments,
+                    Birthday = contact.Birthday,
+                    ProfilePicture = fileName != "" ? FOLDER_NAME + "/" + fileName : null,
+                };
+                context.Contacts.Add(newContact);
+                context.SaveChanges();
+                _newId = newContact.ContactID;
+            }
+            return CreatedAtAction("Get", new { id = _newId });
+        }
+
+
+        // PUT api/contacts/
+        [HttpPut]
+        public IActionResult Put([FromForm]Contact contact)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            // Save Image if exists
+            //--------------------------------
+            string fileName = saveImageIfExists(contact);
+
+            // Update contact
+            //--------------------------------
+            using (var context = new AppDbContext())
+            {
+                ContactsDataModel _found = context.Contacts.Find(contact.ContactID);
+                _found.FirstName = contact.FirstName;
+                _found.LastName = contact.LastName;
+                _found.Email = contact.Email;
+                _found.Phone = contact.Phone;
+                _found.Comments = contact.Comments;
+                _found.Birthday = contact.Birthday;
+
+                if (fileName != "")
+                {
+                    _found.ProfilePicture = FOLDER_NAME + "/" + fileName;
+                }
+                context.SaveChanges();
+            }
+            return StatusCode(204);
+        }
+
+
+        private string saveImageIfExists(Contact contact)
+        {
             string fileName = "";
             if (contact.ProfilePicture != null)
             {
@@ -60,7 +119,7 @@ namespace ContactsApp.Controllers
                 {
                     var file = contact.ProfilePicture;
                     string webRootPath = _hostingEnv.WebRootPath;
-                    string newPath = Path.Combine(webRootPath, folderName);
+                    string newPath = Path.Combine(webRootPath, FOLDER_NAME);
                     if (!Directory.Exists(newPath))
                     {
                         Directory.CreateDirectory(newPath);
@@ -79,40 +138,12 @@ namespace ContactsApp.Controllers
                 }
                 catch (System.Exception ex)
                 {
-                    return StatusCode(500, ex.Message);
+                    throw new ApplicationException("Error saving image to server.");
                 }
             }
-
-            string _newId = null;
-            using (var context = new AppDbContext())
-            {
-                ContactsDataModel newContact = new ContactsDataModel
-                {
-                    FirstName = contact.FirstName,
-                    LastName = contact.LastName,
-                    Email = contact.Email,
-                    Phone = contact.Phone,
-                    Comments = contact.Comments,
-                    Birthday = contact.Birthday,
-                    ProfilePicture = fileName != "" ? folderName + "/" + fileName : null,
-                };
-                context.Contacts.Add(newContact);
-                context.SaveChanges();
-                _newId = newContact.ContactID;
-            }
-            return CreatedAtAction("Get", new { id = _newId });
+            return fileName;
         }
 
-        // PUT api/contacts/
-        [HttpPut]
-        public void Put([FromBody]Contact contact)
-        {
-            using (var context = new AppDbContext())
-            {
-                // Update contact
-                context.SaveChanges();
-            }
-        }
 
         // DELETE api/contacts/{id}
         [HttpDelete("{id}")]
@@ -123,12 +154,14 @@ namespace ContactsApp.Controllers
                 ContactsDataModel contact = context.Contacts.Find(id);
                 context.Contacts.Remove(contact);
                 context.SaveChanges();
-                return StatusCode(204, "Contact deleted successfully.");
+                return StatusCode(204);
             }
         }
 
         public class Contact
         {
+            public string ContactID { get; set; }
+
             [Required]
             [MaxLength(50)]
             public string FirstName { get; set; }

@@ -81,8 +81,12 @@ export class ContactFormComponent implements OnInit {
         formData.append('FirstName', this.contactForm.controls.firstName.value);
         formData.append('LastName', this.contactForm.controls.lastName.value);
         formData.append('Email', this.contactForm.controls.email.value);
-        formData.append('Phone', this.contactForm.controls.phone.value);
-        formData.append('Comments', this.contactForm.controls.comments.value);
+        if (this.contactForm.controls.phone.value) {
+            formData.append('Phone', this.contactForm.controls.phone.value);
+        }
+        if (this.contactForm.controls.comments.value) {
+            formData.append('Comments', this.contactForm.controls.comments.value);
+        }
         if (this.contactForm.controls.birthday.value) {
             let _date = (new Date(this.contactForm.controls.birthday.value)).toLocaleDateString('en-us');
             formData.append('Birthday', _date);
@@ -91,12 +95,17 @@ export class ContactFormComponent implements OnInit {
             formData.append('ProfilePicture', this.photo);
         }
 
-        const uploadReq = new HttpRequest('POST', 'api/contacts', formData);
+        let httpAction = 'POST';
+        if (this.actionType === 'edit' && this.contactModel) {
+            formData.append('ContactID', this.contactModel.contactID);
+            httpAction = 'PUT';
+        }
+        const uploadReq = new HttpRequest(httpAction, 'api/contacts', formData);
 
         this.http.request(uploadReq).subscribe((event: any) => {
             setTimeout(() => {
                 this.router.navigate(['/contacts']);
-            }, 1000);
+            }, 500);
         }, error => {
             console.warn(error);
         });
