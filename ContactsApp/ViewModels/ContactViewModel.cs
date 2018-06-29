@@ -1,15 +1,16 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ContactsApp
 {
-    public class ContactsDataModel
+    public class ContactViewModel
     {
         private static readonly char delimiter = ';';
-
-        [Key]
-        public string ContactID { get; set; }
 
         [Required]
         [MaxLength(50)]

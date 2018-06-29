@@ -2,11 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 
 namespace ContactsApp
 {
@@ -22,12 +27,29 @@ namespace ContactsApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            using (var context = new AppDbContext())
+            services.AddDbContext<AppDbContext>(options =>
             {
-                // Make sure we have a database
-                context.Database.EnsureCreated();
-            }
-                services.AddMvc();
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnectionString"));
+            });
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
+            services.AddScoped<IRepository<ContactsDataModel>, GenericRepository<ContactsDataModel>>();
+            services.AddScoped<IContactRepository, ContactRepository>();
+            services.AddScoped<IUrlHelper, UrlHelper>(x =>
+            {
+                var actionContext = x.GetService<IActionContextAccessor>().ActionContext;
+                return new UrlHelper(actionContext);
+            });
+            services.AddScoped<IMapper, Mapper>();
+
+            services.AddMvc();
+
+            var config = new AutoMapper.MapperConfiguration(c =>
+            {
+                c.AddProfile(new ApplicationProfile());
+            });
+            var mapper = config.CreateMapper();
+            services.AddSingleton(mapper);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -5,9 +5,11 @@ using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static ContactsApp.Enums;
 
 namespace ContactsApp.Controllers
 {
@@ -15,32 +17,59 @@ namespace ContactsApp.Controllers
     public class ContactsController : ControllerBase
     {
         const string FOLDER_NAME = "profile-pics";
-        private IHostingEnvironment _hostingEnv;
 
-        public ContactsController(IHostingEnvironment hostingEnv)
+        private readonly IHostingEnvironment _hostingEnv;
+        private readonly IContactRepository _contactRepository;
+        private readonly IMapper _mapper;
+        private readonly IUrlHelper _urlHelper;
+
+        public ContactsController(
+            IHostingEnvironment hostingEnv,
+            IContactRepository contactRepository,
+            IMapper mapper,
+            IUrlHelper urlHelper
+        )
         {
             _hostingEnv = hostingEnv;
+            _contactRepository = contactRepository;
+            _mapper = mapper;
+            _urlHelper = urlHelper;
         }
 
         // GET api/contacts
         [HttpGet]
-        public IEnumerable<ContactsDataModel> Get()
+        public IActionResult Get(ContactResourceParameters contactResourceParameters)
         {
-            using (var context = new AppDbContext())
+            var contacts = _contactRepository.GetContacts(contactResourceParameters);
+            var previousPageLink = contacts.HasPrevious ?
+                CreateResourceUri(contactResourceParameters, ResourceUriType.Next)
+                : null;
+
+            var nextPageLink = contacts.HasNext ?
+                CreateResourceUri(contactResourceParameters, ResourceUriType.Next)
+                : null;
+
+            var paginationMetadata = new
             {
-                return context.Contacts.OrderBy(c => c.FirstName).ToList();
-            }
+                totalCount = contacts.TotalCount,
+                pageSize = contacts.PageSize,
+                currentPage = contacts.CurrentPage,
+                totalPages = contacts.TotalPages,
+                previousPage = previousPageLink,
+                nextPage = nextPageLink
+            };
+
+            Response.Headers.Add("X-Pagination", Newtonsoft.Json.JsonConvert.SerializeObject(paginationMetadata));
+
+            return Ok(_mapper.Map<IEnumerable<ContactViewModel>>(contacts));
         }
 
         // GET api/contacts/{id}
         [HttpGet("{id}")]
         public IActionResult Get(string id)
         {
-            using (var context = new AppDbContext())
-            {
-                ContactsDataModel contact = context.Contacts.Find(id);
-                return Ok(contact);
-            }
+            ContactsDataModel contact = _contactRepository.Get(id);
+            return Ok(contact);
         }
 
         // POST api/contacts/
@@ -56,23 +85,20 @@ namespace ContactsApp.Controllers
             string fileName = saveImageIfExists(contact);
 
             string _newId = null;
-            using (var context = new AppDbContext())
+            ContactsDataModel newContact = new ContactsDataModel
             {
-                ContactsDataModel newContact = new ContactsDataModel
-                {
-                    FirstName = contact.FirstName,
-                    LastName = contact.LastName,
-                    Email = contact.Email,
-                    Phone = contact.Phone,
-                    Comments = contact.Comments,
-                    Birthday = contact.Birthday,
-                    Groups = contact.Groups,
-                    ProfilePicture = fileName != "" ? FOLDER_NAME + "/" + fileName : null,
-                };
-                context.Contacts.Add(newContact);
-                context.SaveChanges();
-                _newId = newContact.ContactID;
-            }
+                FirstName = contact.FirstName,
+                LastName = contact.LastName,
+                Email = contact.Email,
+                Phone = contact.Phone,
+                Comments = contact.Comments,
+                Birthday = contact.Birthday,
+                Groups = contact.Groups,
+                ProfilePicture = fileName != "" ? FOLDER_NAME + "/" + fileName : null,
+            };
+            _contactRepository.Add(newContact);
+            _contactRepository.SaveChangesAsync();
+            _newId = newContact.ContactID;
             return CreatedAtAction("Get", new { id = _newId });
         }
 
@@ -91,23 +117,20 @@ namespace ContactsApp.Controllers
 
             // Update contact
             //--------------------------------
-            using (var context = new AppDbContext())
-            {
-                ContactsDataModel _found = context.Contacts.Find(contact.ContactID);
-                _found.FirstName = contact.FirstName;
-                _found.LastName = contact.LastName;
-                _found.Email = contact.Email;
-                _found.Phone = contact.Phone;
-                _found.Comments = contact.Comments;
-                _found.Birthday = contact.Birthday;
-                _found.Groups = contact.Groups;
+            ContactsDataModel _found = _contactRepository.Get(contact.ContactID);
+            _found.FirstName = contact.FirstName;
+            _found.LastName = contact.LastName;
+            _found.Email = contact.Email;
+            _found.Phone = contact.Phone;
+            _found.Comments = contact.Comments;
+            _found.Birthday = contact.Birthday;
+            _found.Groups = contact.Groups;
 
-                if (fileName != "")
-                {
-                    _found.ProfilePicture = FOLDER_NAME + "/" + fileName;
-                }
-                context.SaveChanges();
+            if (fileName != "")
+            {
+                _found.ProfilePicture = FOLDER_NAME + "/" + fileName;
             }
+            _contactRepository.SaveChangesAsync();
             return StatusCode(204);
         }
 
@@ -151,12 +174,37 @@ namespace ContactsApp.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(string id)
         {
-            using (var context = new AppDbContext())
+            ContactsDataModel contact = _contactRepository.Get(id);
+            _contactRepository.Delete(contact);
+            _contactRepository.SaveChangesAsync();
+            return StatusCode(204);
+        }
+
+        private string CreateResourceUri(ContactResourceParameters contactResourceParameters, ResourceUriType type)
+        {
+            switch (type)
             {
-                ContactsDataModel contact = context.Contacts.Find(id);
-                context.Contacts.Remove(contact);
-                context.SaveChanges();
-                return StatusCode(204);
+                case ResourceUriType.Previous:
+                    return _urlHelper.Link("GetContacts",
+                        new
+                        {
+                            pageNumber = contactResourceParameters.PageNumber - 1,
+                            pageSize = contactResourceParameters.PageSize
+                        });
+                case ResourceUriType.Next:
+                    return _urlHelper.Link("GetContacts",
+                        new
+                        {
+                            pageNumber = contactResourceParameters.PageNumber - 1,
+                            pageSize = contactResourceParameters.PageSize
+                        });
+                default:
+                    return _urlHelper.Link("GetContacts",
+                        new
+                        {
+                            pageNumber = contactResourceParameters.PageNumber,
+                            pageSize = contactResourceParameters.PageSize
+                        });
             }
         }
 

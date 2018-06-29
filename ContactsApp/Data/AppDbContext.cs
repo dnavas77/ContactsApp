@@ -6,17 +6,19 @@ namespace ContactsApp
     {
         public DbSet<ContactsDataModel> Contacts { get; set; }
 
-        public AppDbContext()
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
 
         }
 
+        /*
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
 
             optionsBuilder.UseSqlServer("Server=DNAVAS-PC;Database=ContactsApp;Trusted_Connection=True;MultipleActiveResultSets=true");
         }
+        */
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
