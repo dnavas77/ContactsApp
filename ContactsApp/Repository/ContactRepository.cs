@@ -20,7 +20,8 @@ namespace ContactsApp
             IQueryable<ContactsDataModel> query = _dbSet;
 
             return PagedList<ContactsDataModel>.Create(
-                query, contactResourceParameters.PageNumber,
+                query,
+                contactResourceParameters.PageNumber,
                 contactResourceParameters.PageSize
             );
         }

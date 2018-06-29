@@ -6,7 +6,7 @@ namespace ContactsApp
 {
     public class ContactsDataModel
     {
-        private static readonly char delimiter = ';';
+        private static readonly char delimiter = ',';
 
         [Key]
         public string ContactID { get; set; }

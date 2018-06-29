@@ -22,18 +22,21 @@ namespace ContactsApp.Controllers
         private readonly IContactRepository _contactRepository;
         private readonly IMapper _mapper;
         private readonly IUrlHelper _urlHelper;
+        private readonly AppDbContext _context;
 
         public ContactsController(
             IHostingEnvironment hostingEnv,
             IContactRepository contactRepository,
             IMapper mapper,
-            IUrlHelper urlHelper
+            IUrlHelper urlHelper,
+            AppDbContext context
         )
         {
             _hostingEnv = hostingEnv;
             _contactRepository = contactRepository;
             _mapper = mapper;
             _urlHelper = urlHelper;
+            _context = context;
         }
 
         // GET api/contacts
@@ -68,7 +71,7 @@ namespace ContactsApp.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(string id)
         {
-            ContactsDataModel contact = _contactRepository.Get(id);
+            ContactsDataModel contact = _context.Contacts.Find(id);
             return Ok(contact);
         }
 
@@ -84,7 +87,7 @@ namespace ContactsApp.Controllers
             // Save Image
             string fileName = saveImageIfExists(contact);
 
-            string _newId = null;
+            string _newId;
             ContactsDataModel newContact = new ContactsDataModel
             {
                 FirstName = contact.FirstName,
@@ -117,7 +120,7 @@ namespace ContactsApp.Controllers
 
             // Update contact
             //--------------------------------
-            ContactsDataModel _found = _contactRepository.Get(contact.ContactID);
+            ContactsDataModel _found = _context.Contacts.Find(contact.ContactID);
             _found.FirstName = contact.FirstName;
             _found.LastName = contact.LastName;
             _found.Email = contact.Email;
@@ -130,7 +133,7 @@ namespace ContactsApp.Controllers
             {
                 _found.ProfilePicture = FOLDER_NAME + "/" + fileName;
             }
-            _contactRepository.SaveChangesAsync();
+            _context.SaveChanges();
             return StatusCode(204);
         }
 
@@ -174,9 +177,9 @@ namespace ContactsApp.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(string id)
         {
-            ContactsDataModel contact = _contactRepository.Get(id);
-            _contactRepository.Delete(contact);
-            _contactRepository.SaveChangesAsync();
+            ContactsDataModel contact = _context.Contacts.Find(id);
+            _context.Contacts.Remove(contact);
+            _context.SaveChanges();
             return StatusCode(204);
         }
 

@@ -12,6 +12,9 @@ namespace ContactsApp
     {
         private static readonly char delimiter = ';';
 
+        [Key]
+        public string ContactID { get; set; }
+
         [Required]
         [MaxLength(50)]
         public string FirstName { get; set; }
