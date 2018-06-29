@@ -17,7 +17,7 @@ namespace ContactsApp
 
         public PagedList<ContactsDataModel> GetContacts(ContactResourceParameters contactResourceParameters)
         {
-            IQueryable<ContactsDataModel> query = _dbSet;
+            IQueryable<ContactsDataModel> query = _dbSet.OrderBy(c => c.FirstName);
 
             return PagedList<ContactsDataModel>.Create(
                 query,

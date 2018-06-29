@@ -15,7 +15,8 @@ export class ContactsComponent implements OnInit {
     public contacts: Contact[] = [];
     public pagination: object = {}
     public fetchingContacts: boolean = false;
-    public itemsPerPage: number = 3;
+    public pageSize: number = 5;
+    public pageNumber: number = 1;
 
     modalRef?: BsModalRef;
     contactToDelete?: Contact;
@@ -33,10 +34,10 @@ export class ContactsComponent implements OnInit {
 
     GetContacts(): void {
         this.fetchingContacts = true;
-        this.http.get<Result>(this.baseUrl + 'api/contacts').subscribe(result => {
+        const queryString: string = this.baseUrl + 'api/contacts?pageSize=' + this.pageSize + '&pageNumber=' + this.pageNumber;
+        this.http.get<Result>(queryString).subscribe(result => {
             this.contacts = result.contacts;
             this.pagination = result.pagination;
-            console.warn(JSON.stringify(this.pagination));
             this.fetchingContacts = false;
         }, error => {
             console.error(error);
@@ -53,16 +54,14 @@ export class ContactsComponent implements OnInit {
         if (this.contactToDelete) {
             let _ = this.modalRef ? this.modalRef.hide() : null;
             this.http.delete('api/contacts/' + this.contactToDelete.contactID).subscribe(result => {
-                this.contacts = this.contacts.filter(cont => {
-                    let _id = this.contactToDelete ? this.contactToDelete.contactID : '';
-                    return cont.contactID !== _id;
-                });
+                this.GetContacts();
             });
         }
     }
 
     pageChanged(event: any) {
-        console.warn(event.page);
+        this.pageNumber = event.page;
+        this.GetContacts();
     }
 }
 
