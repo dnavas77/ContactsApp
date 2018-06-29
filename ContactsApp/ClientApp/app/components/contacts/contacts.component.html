@@ -59,6 +59,12 @@
     </table>
 </div>
 
+<pagination
+    [totalItems]="pagination.totalCount"
+    [itemsPerPage]="itemsPerPage"
+    (pageChanged)="pageChanged($event)">
+</pagination>
+
 <ng-template #confirmModalTemplate>
     <div class="modal-body text-center">
         <h3>are you sure you want to delete this contact?</h3>

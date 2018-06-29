@@ -62,9 +62,15 @@ namespace ContactsApp.Controllers
                 nextPage = nextPageLink
             };
 
-            Response.Headers.Add("X-Pagination", Newtonsoft.Json.JsonConvert.SerializeObject(paginationMetadata));
+            //Response.Headers.Add("X-Pagination", Newtonsoft.Json.JsonConvert.SerializeObject(paginationMetadata));
 
-            return Ok(_mapper.Map<IEnumerable<ContactViewModel>>(contacts));
+            return Ok(
+                new
+                {
+                    contacts = _mapper.Map<IEnumerable<ContactViewModel>>(contacts),
+                    pagination = paginationMetadata
+                }
+            );
         }
 
         // GET api/contacts/{id}

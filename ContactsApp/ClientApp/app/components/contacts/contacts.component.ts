@@ -13,7 +13,9 @@ import { Router } from '@angular/router';
 })
 export class ContactsComponent implements OnInit {
     public contacts: Contact[] = [];
+    public pagination: object = {}
     public fetchingContacts: boolean = false;
+    public itemsPerPage: number = 3;
 
     modalRef?: BsModalRef;
     contactToDelete?: Contact;
@@ -31,8 +33,10 @@ export class ContactsComponent implements OnInit {
 
     GetContacts(): void {
         this.fetchingContacts = true;
-        this.http.get <Contact[]>(this.baseUrl + 'api/contacts').subscribe(result => {
-            this.contacts = result;
+        this.http.get<Result>(this.baseUrl + 'api/contacts').subscribe(result => {
+            this.contacts = result.contacts;
+            this.pagination = result.pagination;
+            console.warn(JSON.stringify(this.pagination));
             this.fetchingContacts = false;
         }, error => {
             console.error(error);
@@ -56,6 +60,10 @@ export class ContactsComponent implements OnInit {
             });
         }
     }
+
+    pageChanged(event: any) {
+        console.warn(event.page);
+    }
 }
 
 interface Contact {
@@ -68,4 +76,9 @@ interface Contact {
     groups: string[];
     profilePicture: string;
     comments: string;
+}
+
+interface Result {
+    contacts: Contact[],
+    pagination: object
 }

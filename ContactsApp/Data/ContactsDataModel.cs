@@ -41,7 +41,7 @@ namespace ContactsApp
             get { return _groups != null ? _groups.Split(delimiter) : null;  }
             set
             {
-                _groups = string.Join($"{delimiter}", value);
+                _groups = value != null ? string.Join($"{delimiter}", value) : null;
             }
         }
     }

@@ -17,6 +17,7 @@ import { ContactFormComponent } from './components/contacts/form/form.component'
 import { BsDatepickerModule, DatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 // ngx-select
 import { NgxSelectModule } from 'ngx-select-ex';
@@ -32,6 +33,7 @@ import { NgxSelectModule } from 'ngx-select-ex';
         HomeComponent
     ],
     imports: [
+        PaginationModule.forRoot(),
         NgxSelectModule,
         BsDatepickerModule.forRoot(),
         DatepickerModule.forRoot(),
