@@ -24,6 +24,8 @@ export class ContactFormComponent implements OnInit {
     photo: File | null = null;
     contactForm!: FormGroup;
 
+    groupsList: string[] = ['Family', 'Friend', 'Colleague', 'Associate'];
+
     constructor(
         private http: HttpClient,
         private router: Router,
@@ -44,6 +46,7 @@ export class ContactFormComponent implements OnInit {
             ]),
             phone: new FormControl('', Validators.pattern(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/)),
             birthday: new FormControl(),
+            groups: new FormControl(),
             comments: new FormControl('', Validators.maxLength(2000)),
         });
         if (this.actionType === 'edit' && this.contactModel) {
@@ -52,6 +55,10 @@ export class ContactFormComponent implements OnInit {
             this.contactForm.controls.email.setValue(this.contactModel.email);
             this.contactForm.controls.phone.setValue(this.contactModel.phone);
             this.contactForm.controls.comments.setValue(this.contactModel.comments);
+
+            if (this.contactModel.groups && this.contactModel.groups.length) {
+                this.contactForm.controls.groups.setValue(this.contactModel.groups);
+            }
 
             if (this.contactModel.birthday) {
                 this.contactForm.controls.birthday.setValue(
@@ -83,6 +90,9 @@ export class ContactFormComponent implements OnInit {
         formData.append('Email', this.contactForm.controls.email.value);
         if (this.contactForm.controls.phone.value) {
             formData.append('Phone', this.contactForm.controls.phone.value);
+        }
+        if (this.contactForm.controls.groups.value) {
+            formData.append('Groups', this.contactForm.controls.groups.value);
         }
         if (this.contactForm.controls.comments.value) {
             formData.append('Comments', this.contactForm.controls.comments.value);
@@ -126,6 +136,7 @@ interface Contact {
     email: number;
     phone: string,
     birthday: Date;
+    groups: string[];
     profilePicture: string;
     comments: string;
 }

@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "bootstrap-css-only": "3.3.7",
-    "ngx-bootstrap": "2.0.5"
+    "ngx-bootstrap": "2.0.5",
+    "ngx-select-ex": "^3.5.9"
   }
 }

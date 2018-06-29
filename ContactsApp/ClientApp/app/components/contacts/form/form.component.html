@@ -8,7 +8,7 @@
         <div class="form-row">
             <div class="form-group col-md-6" [ngClass]="{'has-error': contactForm.controls.firstName.invalid && contactForm.controls.firstName.dirty}">
                 <label class="control-label">
-                    First Name* 
+                    First Name*
                     <i *ngIf="contactForm.controls.firstName.invalid && contactForm.controls.firstName.dirty">
                         (This field is required)
                     </i>
@@ -60,7 +60,7 @@
         </div>
 
         <div class="form-row">
-            <div class="form-group col-md-12" [ngClass]="{'has-error': contactForm.controls.comments.invalid && contactForm.controls.comments.dirty}">
+            <div class="form-group col-md-6" [ngClass]="{'has-error': contactForm.controls.comments.invalid && contactForm.controls.comments.dirty}">
                 <label class="control-label">
                     Comments
                     <i *ngIf="contactForm.controls.comments.invalid && contactForm.controls.comments.dirty">
@@ -69,6 +69,16 @@
                 </label>
                 <textarea class="form-control" cols="100" rows="5" formControlName="comments"></textarea>
              </div>
+
+            <div class="form-group col-md-6">
+                <label class="control-label">Select Group(s)</label>
+                <ngx-select
+                    [items]="groupsList"
+                    [multiple]="true"
+                    placeholder="Select group(s)"
+                    formControlName="groups">
+                </ngx-select>
+            </div>
          </div>
         <div class="form-row">
             <div class="form-group col-md-12">

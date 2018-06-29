@@ -66,6 +66,7 @@ namespace ContactsApp.Controllers
                     Phone = contact.Phone,
                     Comments = contact.Comments,
                     Birthday = contact.Birthday,
+                    Groups = contact.Groups,
                     ProfilePicture = fileName != "" ? FOLDER_NAME + "/" + fileName : null,
                 };
                 context.Contacts.Add(newContact);
@@ -99,6 +100,7 @@ namespace ContactsApp.Controllers
                 _found.Phone = contact.Phone;
                 _found.Comments = contact.Comments;
                 _found.Birthday = contact.Birthday;
+                _found.Groups = contact.Groups;
 
                 if (fileName != "")
                 {
@@ -184,6 +186,8 @@ namespace ContactsApp.Controllers
             public string Comments { get; set; }
 
             public IFormFile ProfilePicture { get; set; }
+
+            public string[] Groups { get; set; }
         }
     }
 }

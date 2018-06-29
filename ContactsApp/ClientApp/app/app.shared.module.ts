@@ -13,11 +13,13 @@ import { NewContactComponent } from './components/contacts/new/new.component';
 import { EditContactComponent } from './components/contacts/edit/edit.component';
 import { ContactFormComponent } from './components/contacts/form/form.component';
 
-
 // ngx-bootstrap
 import { BsDatepickerModule, DatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ModalModule } from 'ngx-bootstrap/modal';
+
+// ngx-select
+import { NgxSelectModule } from 'ngx-select-ex';
 
 @NgModule({
     declarations: [
@@ -30,6 +32,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
         HomeComponent
     ],
     imports: [
+        NgxSelectModule,
         BsDatepickerModule.forRoot(),
         DatepickerModule.forRoot(),
         BsDropdownModule.forRoot(),

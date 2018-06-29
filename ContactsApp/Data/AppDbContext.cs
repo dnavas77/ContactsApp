@@ -21,6 +21,10 @@ namespace ContactsApp
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<ContactsDataModel>()
+                .Property<string>("Groups_")
+                .HasField("_groups");
         }
     }
 }

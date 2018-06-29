@@ -42,6 +42,7 @@ interface Contact {
     email: number;
     phone: string,
     birthday: Date;
+    groups: string[];
     profilePicture: string;
     comments: string;
 }
