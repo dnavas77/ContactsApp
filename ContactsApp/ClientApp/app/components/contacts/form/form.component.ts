@@ -62,7 +62,7 @@ export class ContactFormComponent implements OnInit {
 
             if (this.contactModel.birthday) {
                 this.contactForm.controls.birthday.setValue(
-                    (new Date(this.contactModel.birthday)).toLocaleDateString('en-us')
+                    new Date(this.contactModel.birthday)
                 );
             }
         }
@@ -88,19 +88,26 @@ export class ContactFormComponent implements OnInit {
         formData.append('FirstName', this.contactForm.controls.firstName.value);
         formData.append('LastName', this.contactForm.controls.lastName.value);
         formData.append('Email', this.contactForm.controls.email.value);
+
         if (this.contactForm.controls.phone.value) {
             formData.append('Phone', this.contactForm.controls.phone.value);
         }
+
         if (this.contactForm.controls.groups.value) {
             formData.append('Groups', this.contactForm.controls.groups.value);
         }
-        if (this.contactForm.controls.comments.value) {
-            formData.append('Comments', this.contactForm.controls.comments.value);
+
+        const _comments = this.contactForm.controls.comments.value;
+        if (_comments && _comments.length) {
+            formData.append('Comments', _comments);
         }
-        if (this.contactForm.controls.birthday.value) {
-            let _date = (new Date(this.contactForm.controls.birthday.value)).toLocaleDateString('en-us');
+
+        const _birthday = this.contactForm.controls.birthday.value;
+        if (_birthday && _birthday.toJSON) {
+            let _date = _birthday.toJSON();
             formData.append('Birthday', _date);
         }
+
         if (this.photo && this.photo.type) {
             formData.append('ProfilePicture', this.photo);
         }

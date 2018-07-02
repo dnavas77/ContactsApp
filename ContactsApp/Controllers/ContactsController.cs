@@ -91,7 +91,7 @@ namespace ContactsApp.Controllers
             }
 
             // Save Image
-            string fileName = saveImageIfExists(contact);
+            string fileName = SaveImageIfExists(contact);
 
             string _newId;
             ContactsDataModel newContact = new ContactsDataModel
@@ -122,7 +122,7 @@ namespace ContactsApp.Controllers
             }
             // Save Image if exists
             //--------------------------------
-            string fileName = saveImageIfExists(contact);
+            string fileName = SaveImageIfExists(contact);
 
             // Update contact
             //--------------------------------
@@ -144,35 +144,29 @@ namespace ContactsApp.Controllers
         }
 
 
-        private string saveImageIfExists(Contact contact)
+        private string SaveImageIfExists(Contact contact)
         {
             string fileName = "";
             if (contact.ProfilePicture != null)
             {
-                try
+                var file = contact.ProfilePicture;
+                string webRootPath = _hostingEnv.WebRootPath;
+                string newPath = Path.Combine(webRootPath, FOLDER_NAME);
+                if (!Directory.Exists(newPath))
                 {
-                    var file = contact.ProfilePicture;
-                    string webRootPath = _hostingEnv.WebRootPath;
-                    string newPath = Path.Combine(webRootPath, FOLDER_NAME);
-                    if (!Directory.Exists(newPath))
-                    {
-                        Directory.CreateDirectory(newPath);
-                    }
-                    if (file.Length > 0)
-                    {
-                        fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-                        var milliseconds = (DateTime.Now - new DateTime(1970, 1, 1)).TotalMilliseconds;
-                        fileName = milliseconds + fileName;
-                        string fullPath = Path.Combine(newPath, fileName);
-                        using (var stream = new FileStream(fullPath, FileMode.Create))
-                        {
-                            file.CopyTo(stream);
-                        }
-                    }
+                    Directory.CreateDirectory(newPath);
                 }
-                catch (System.Exception ex)
+                if (file.Length > 0)
                 {
-                    throw new ApplicationException("Error saving image to server.");
+                    fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                    fileName = fileName.Substring(fileName.LastIndexOf('\\') + 1);
+                    var milliseconds = (DateTime.Now - new DateTime(1970, 1, 1)).TotalMilliseconds;
+                    fileName = milliseconds + fileName;
+                    string fullPath = Path.Combine(newPath, fileName);
+                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
                 }
             }
             return fileName;
